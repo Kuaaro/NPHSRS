@@ -1,34 +1,19 @@
-from typing import List
-from Student import Student
+from typing import Dict
+from Class import Class
 
 class School:
-    def __init__(self, name: str, eng_mult: float, pl_mult: float, math_mult: float) -> None:
-        self.name = name
-        self.eng_mult = eng_mult
-        self.pl_mult = pl_mult
-        self.math_mult = math_mult
-        self.student_list: List[Student]= []
-    
-    def add_student(self, student: Student) -> Student:
-        student.current_score = self.eng_mult * student.eng_score + self.pl_mult * student.pl_score + self.math_mult * student.math_score
+    def __init__(self, school_file) -> None:
+        with open(school_file, "r") as f_in:
+            self.name: str = f_in.readline().rstrip('\n')
+            if self.name == None:
+                self = None
+                return
 
-        for i in range(len(self.student_list)):
-            if student.current_score > self.student_list[i].current_score:
-                self.student_list.insert(i, student)
+            self.class_list: Dict[str, Class] = {}
 
-                print(self)
-
-                if len(self.student_list) > 10:
-                    return self.student_list.pop()
-                return None
-            
-        print(self)
-
-        if len(self.student_list) < 10:
-            self.student_list.append(student)
-            return None
-        return student
+            while read_line := f_in.readline():
+                temp: Class = Class(read_line)
+                self.class_list.update({temp.name: temp})
 
     def __str__(self) -> str:
-        return self.name + ":\n\t" + "\n\t".join([str(x) for x in self.student_list])
-            
+        return self.name + ":\n\t" + "\n\t".join([str(x) for x in self.class_list.values()])
