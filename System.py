@@ -1,26 +1,30 @@
-from Student import Student
 from School import School
-from typing import List
+from typing import Dict, List
+from Student import Student
+from os import listdir
+
+schools: Dict[str, School] = {}
+school_names = listdir("./Schools")
+for sch in school_names:
+    temp = School("./Schools/"+sch)
+    schools.update({temp.name: temp})
 
 students: List[Student] = []
-students.append(Student('A', 54, 53, 26))
-students.append(Student('B', 76, 87, 53))
-students.append(Student('C', 23, 13, 89))
-students.append(Student('D', 13, 83, 35))
-students.append(Student('E', 63, 83, 97))
-students.append(Student('F', 27, 37, 37))
-students.append(Student('G', 94, 26, 74))
-students.append(Student('H', 37, 53, 18))
-students.append(Student('I', 30, 95, 76))
-students.append(Student('J', 20, 37, 54))
+student_names = listdir("./Students")
+for std in student_names:
+    students.append(Student("./Students/" + std))
 
-schools: List[School] = []
-schools.append(School("HS1", 0.4, 0.4, 0.2))
-schools.append(School("HS2", 0.3, 0.3, 0.4))
+while students:
+    students[0].get_next_choice()
+    if not students[0].current_school_choice:
+        schools["no_place"].class_list["no_place"].student_list.append(students[0])
+        students[0].current_score = 0
+        students.pop(0)
+    elif students[0].current_school_choice in schools and students[0].current_class_choice in schools[students[0].current_school_choice].class_list: #Checks, if students has given the correct names of school and class 
+        students.extend(schools[students[0].current_school_choice].class_list[students[0].current_class_choice].add_student(students[0])) #Adds student to classroom, if there are any students that don't meet requirements anymore adds them to list students
+        students.pop(0)
 
-for student in students:
-    temp = schools[0].add_student(student)
-    if type(temp) == Student:
-        schools[1].add_student(temp)
-print(schools[0])
-print(schools[1])
+with open("./results.txt", "w") as f_out:
+    for school in schools.keys():
+        print(schools[school])
+        f_out.write(str(schools[school]) + '\n')
